@@ -1,11 +1,11 @@
-# FILES ######################
+# FILES #######
 
 *_log.json
 
-# LOCATIONS ##################
+# LOCATIONS ###
 
 storage/db.sqlite
 
-# TRASH ######################
+# TRASH #######
 
 *DS_Store

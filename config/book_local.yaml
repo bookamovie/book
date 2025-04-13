@@ -5,7 +5,7 @@ sqlite:
   address: storage/db.sqlite
 kafka:
   addresses:
-    - "http://localhost:9200"
+    - "0.0.0.0:9092"
   topic: "notifications"
   offset: ~
   partition: ~
