@@ -1,6 +1,8 @@
 package utils
 
 type Config struct {
+	LogMode string
+
 	BookaMovieConfig *BookaMovieConfig `yaml:"bookamovie"`
 	SQLiteConfig     *SQLiteConfig     `yaml:"sqlite"`
 	KafkaConfig      *KafkaConfig      `yaml:"kafka"`

@@ -1,11 +1,13 @@
-package bookamovieservice
+package bookamovie
 
 import (
 	"context"
 
 	bookamovierpc "github.com/xoticdsign/bookamovie-proto/gen/go/bookamovie/v3"
 	broker "github.com/xoticdsign/bookamovie/internal/broker/kafka"
+	"github.com/xoticdsign/bookamovie/internal/lib/logger"
 	storage "github.com/xoticdsign/bookamovie/internal/storage/sqlite"
+	"github.com/xoticdsign/bookamovie/internal/utils"
 )
 
 type Querier interface {
@@ -19,11 +21,17 @@ type Brokerer interface {
 type Service struct {
 	Storage Querier
 	Broker  Brokerer
+
+	log    *logger.Logger
+	config *utils.Config
 }
 
-func New(storage *storage.Storage, broker *broker.Broker) *Service {
+func New(cfg *utils.Config, log *logger.Logger, storage *storage.Storage, broker *broker.Broker) *Service {
 	return &Service{
 		Storage: storage,
+
+		log:    log,
+		config: cfg,
 	}
 }
 

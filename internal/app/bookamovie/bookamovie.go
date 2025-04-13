@@ -1,4 +1,4 @@
-package bookamovieapp
+package bookamovie
 
 import (
 	"context"
@@ -10,7 +10,8 @@ import (
 
 	bookamovierpc "github.com/xoticdsign/bookamovie-proto/gen/go/bookamovie/v3"
 	broker "github.com/xoticdsign/bookamovie/internal/broker/kafka"
-	"github.com/xoticdsign/bookamovie/internal/services/bookamovieservice"
+	"github.com/xoticdsign/bookamovie/internal/lib/logger"
+	bookamovieservice "github.com/xoticdsign/bookamovie/internal/services/bookamovie"
 	storage "github.com/xoticdsign/bookamovie/internal/storage/sqlite"
 	"github.com/xoticdsign/bookamovie/internal/utils"
 )
@@ -18,17 +19,19 @@ import (
 type App struct {
 	Server *grpc.Server
 
+	log    *logger.Logger
 	config *utils.Config
 }
 
-func New(cfg *utils.Config, storage *storage.Storage, broker *broker.Broker) *App {
+func New(log *logger.Logger, cfg *utils.Config, storage *storage.Storage, broker *broker.Broker) *App {
 	server := grpc.NewServer()
 
-	bookamovierpc.RegisterBookaMovieServer(server, &api{service: bookamovieservice.New(storage, broker)})
+	bookamovierpc.RegisterBookaMovieServer(server, &api{service: bookamovieservice.New(cfg, log, storage, broker)})
 
 	return &App{
 		Server: server,
 
+		log:    log,
 		config: cfg,
 	}
 }
