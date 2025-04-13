@@ -63,8 +63,8 @@ github.com/stretchr/testify v1.8.0/go.mod h1:yNjHg4UonilssWZ8iaSj1OCr/vHnekPRkoO
 github.com/stretchr/testify v1.8.1/go.mod h1:w2LPCIKwWwSfY2zedu0+kehJoqGctiVI29o6fzry7u4=
 github.com/stretchr/testify v1.10.0 h1:Xv5erBjTwe/5IxqUQTdXv5kgmIvbHo3QQyRwhJsOfJA=
 github.com/stretchr/testify v1.10.0/go.mod h1:r2ic/lqez/lEtzL7wO/rwa5dbSLXVDPFyf8C91i36aY=
-github.com/xoticdsign/bookamovie-proto v0.0.3 h1:R3edbabKj4bM0sPA58lLyHg9Bauf/JXff0u0K1FHQO4=
-github.com/xoticdsign/bookamovie-proto v0.0.3/go.mod h1:N31G18bbIOqzXla0IyXvS8l0I15dDSxA7g+QoZutW2E=
+github.com/xoticdsign/bookamovie-proto v0.0.4 h1:3xaC4jRwKt6/nGgfTJQHuA+2wSmFDdPClWmU7RqtWFo=
+github.com/xoticdsign/bookamovie-proto v0.0.4/go.mod h1:N31G18bbIOqzXla0IyXvS8l0I15dDSxA7g+QoZutW2E=
 github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5taEt/CY=
 go.opentelemetry.io/auto/sdk v1.1.0 h1:cH53jehLUN6UFLY71z+NDOiNJqDdPRaXzTel0sJySYA=
 go.opentelemetry.io/auto/sdk v1.1.0/go.mod h1:3wSPjt5PWp2RhlCcmmOial7AvC4DQqZb7a7wCow3W8A=

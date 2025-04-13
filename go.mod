@@ -1,11 +1,11 @@
-module github.com/xoticdsign/bookamovie
+module github.com/xoticdsign/book
 
 go 1.22.5
 
 require (
 	github.com/IBM/sarama v1.45.1
 	github.com/mattn/go-sqlite3 v1.14.27
-	github.com/xoticdsign/bookamovie-proto v0.0.3
+	github.com/xoticdsign/bookamovie-proto v0.0.4
 	google.golang.org/grpc v1.71.1
 )
 

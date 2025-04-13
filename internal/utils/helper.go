@@ -1,8 +1,8 @@
 package utils
 
-import bookamovierpc "github.com/xoticdsign/bookamovie-proto/gen/go/bookamovie/v3"
+import bookrpc "github.com/xoticdsign/bookamovie-proto/gen/go/book/v3"
 
-func ValidateBookRequest(req *bookamovierpc.BookRequest) bool {
+func ValidateBookRequest(req *bookrpc.BookRequest) bool {
 	switch {
 	case req.GetCinema().GetName() == "":
 		return false

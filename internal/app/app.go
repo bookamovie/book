@@ -6,15 +6,15 @@ import (
 	"os/signal"
 	"syscall"
 
-	bookamovieapp "github.com/xoticdsign/bookamovie/internal/app/bookamovie"
-	broker "github.com/xoticdsign/bookamovie/internal/broker/kafka"
-	"github.com/xoticdsign/bookamovie/internal/lib/logger"
-	storage "github.com/xoticdsign/bookamovie/internal/storage/sqlite"
-	"github.com/xoticdsign/bookamovie/internal/utils"
+	bookapp "github.com/xoticdsign/book/internal/app/book"
+	broker "github.com/xoticdsign/book/internal/broker/kafka"
+	"github.com/xoticdsign/book/internal/lib/logger"
+	storage "github.com/xoticdsign/book/internal/storage/sqlite"
+	"github.com/xoticdsign/book/internal/utils"
 )
 
 type App struct {
-	BookaMovie *bookamovieapp.App
+	BookaMovie *bookapp.App
 	Storage    *storage.Storage
 	Broker     *broker.Broker
 
@@ -40,7 +40,7 @@ func New() (*App, error) {
 		return &App{}, err
 	}
 
-	bookamovie := bookamovieapp.New(log, cfg, s, br)
+	bookamovie := bookapp.New(log, cfg, s, br)
 
 	return &App{
 		BookaMovie: bookamovie,
@@ -90,7 +90,7 @@ func (a *App) Run() {
 	)
 }
 
-func shutdown(log *logger.Logger, bookamovie *bookamovieapp.App, storage *storage.Storage, broker *broker.Broker) {
+func shutdown(log *logger.Logger, bookamovie *bookapp.App, storage *storage.Storage, broker *broker.Broker) {
 	broker.Shutdown()
 	storage.Shutdown()
 	bookamovie.Shutdown()

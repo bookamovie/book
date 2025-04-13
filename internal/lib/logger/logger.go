@@ -4,7 +4,7 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/xoticdsign/bookamovie/internal/utils"
+	"github.com/xoticdsign/book/internal/utils"
 )
 
 type Logger struct {
@@ -13,15 +13,15 @@ type Logger struct {
 }
 
 type Logs struct {
-	AppLog        *slog.Logger
-	BookaMovieLog *slog.Logger
-	StorageLog    *slog.Logger
-	BrokerLog     *slog.Logger
+	AppLog     *slog.Logger
+	BookLog    *slog.Logger
+	StorageLog *slog.Logger
+	BrokerLog  *slog.Logger
 }
 
 func New(logMode string) (*Logger, error) {
 	var appLog *slog.Logger
-	var bookamovieLog *slog.Logger
+	var bookLog *slog.Logger
 	var storageLog *slog.Logger
 	var brokerLog *slog.Logger
 
@@ -32,7 +32,7 @@ func New(logMode string) (*Logger, error) {
 
 	switch logMode {
 	case "local":
-		bookamovieLog = slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
+		bookLog = slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
 			Level: slog.LevelDebug,
 		}))
 
@@ -45,7 +45,7 @@ func New(logMode string) (*Logger, error) {
 		}))
 
 	case "dev":
-		b, err = utils.OpenLog("bookamovie_dev_log.json")
+		b, err = utils.OpenLog("book_dev_log.json")
 		if err != nil {
 			return &Logger{}, err
 		}
@@ -58,7 +58,7 @@ func New(logMode string) (*Logger, error) {
 			return &Logger{}, err
 		}
 
-		bookamovieLog = slog.New(slog.NewJSONHandler(b, &slog.HandlerOptions{
+		bookLog = slog.New(slog.NewJSONHandler(b, &slog.HandlerOptions{
 			Level: slog.LevelDebug,
 		}))
 
@@ -71,7 +71,7 @@ func New(logMode string) (*Logger, error) {
 		}))
 
 	case "prod":
-		b, err = utils.OpenLog("bookamovie_log.json")
+		b, err = utils.OpenLog("book_log.json")
 		if err != nil {
 			return &Logger{}, err
 		}
@@ -84,7 +84,7 @@ func New(logMode string) (*Logger, error) {
 			return &Logger{}, err
 		}
 
-		bookamovieLog = slog.New(slog.NewJSONHandler(b, &slog.HandlerOptions{
+		bookLog = slog.New(slog.NewJSONHandler(b, &slog.HandlerOptions{
 			Level: slog.LevelInfo,
 		}))
 
@@ -107,10 +107,10 @@ func New(logMode string) (*Logger, error) {
 
 	return &Logger{
 		Logs: Logs{
-			AppLog:        appLog,
-			BookaMovieLog: bookamovieLog,
-			StorageLog:    storageLog,
-			BrokerLog:     brokerLog,
+			AppLog:     appLog,
+			BookLog:    bookLog,
+			StorageLog: storageLog,
+			BrokerLog:  brokerLog,
 		},
 		LogFiles: logFiles,
 	}, nil

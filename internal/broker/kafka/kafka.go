@@ -3,8 +3,8 @@ package kafka
 import (
 	"github.com/IBM/sarama"
 
-	bookamovierpc "github.com/xoticdsign/bookamovie-proto/gen/go/bookamovie/v3"
-	"github.com/xoticdsign/bookamovie/internal/utils"
+	"github.com/xoticdsign/book/internal/utils"
+	bookrpc "github.com/xoticdsign/bookamovie-proto/gen/go/book/v3"
 )
 
 type Broker struct {
@@ -28,7 +28,7 @@ func (b *Broker) Shutdown() {
 
 type BookNotifyEvent struct {
 	Ticket string
-	Data   *bookamovierpc.BookRequest
+	Data   *bookrpc.BookRequest
 }
 
 func (b *Broker) BookNotify(event *BookNotifyEvent) error {

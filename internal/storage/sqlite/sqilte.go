@@ -4,8 +4,8 @@ import (
 	"database/sql"
 
 	_ "github.com/mattn/go-sqlite3"
-	bookamovierpc "github.com/xoticdsign/bookamovie-proto/gen/go/bookamovie/v3"
-	"github.com/xoticdsign/bookamovie/internal/utils"
+	"github.com/xoticdsign/book/internal/utils"
+	bookrpc "github.com/xoticdsign/bookamovie-proto/gen/go/book/v3"
 )
 
 type Storage struct {
@@ -29,7 +29,7 @@ func (s *Storage) Shutdown() {
 
 type BookQuery struct {
 	Ticket string
-	Data   *bookamovierpc.BookRequest
+	Data   *bookrpc.BookRequest
 }
 
 func (s *Storage) Book(query *BookQuery) error {

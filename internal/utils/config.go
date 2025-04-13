@@ -3,12 +3,12 @@ package utils
 type Config struct {
 	LogMode string
 
-	BookaMovieConfig *BookaMovieConfig `yaml:"bookamovie"`
-	SQLiteConfig     *SQLiteConfig     `yaml:"sqlite"`
-	KafkaConfig      *KafkaConfig      `yaml:"kafka"`
+	BookConfig   *BookConfig   `yaml:"bookamovie"`
+	SQLiteConfig *SQLiteConfig `yaml:"sqlite"`
+	KafkaConfig  *KafkaConfig  `yaml:"kafka"`
 }
 
-type BookaMovieConfig struct {
+type BookConfig struct {
 	Network string `yaml:"network"`
 	Address string `yaml:"address"`
 }
