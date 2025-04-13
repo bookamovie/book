@@ -4,5 +4,5 @@ book:
 sqlite:
   address: storage/db.sqlite
 kafka:
-  addresses:
-    - http://localhost:9200
+  addresses: 
+    - "http://localhost:9200"

@@ -10,9 +10,11 @@ import (
 
 type Storage struct {
 	DB *sql.DB
+
+	config utils.Config
 }
 
-func New(cfg *utils.Config) (*Storage, error) {
+func New(cfg utils.Config) (*Storage, error) {
 	db, err := sql.Open("sqlite3", cfg.SQLiteConfig.Address)
 	if err != nil {
 		return &Storage{}, err
@@ -20,6 +22,8 @@ func New(cfg *utils.Config) (*Storage, error) {
 
 	return &Storage{
 		DB: db,
+
+		config: cfg,
 	}, nil
 }
 

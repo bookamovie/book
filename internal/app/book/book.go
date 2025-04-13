@@ -20,10 +20,10 @@ type App struct {
 	Server *grpc.Server
 
 	log    *logger.Logger
-	config *utils.Config
+	config utils.Config
 }
 
-func New(log *logger.Logger, cfg *utils.Config, storage *storage.Storage, broker *broker.Broker) *App {
+func New(log *logger.Logger, cfg utils.Config, storage *storage.Storage, broker *broker.Broker) *App {
 	server := grpc.NewServer()
 
 	bookrpc.RegisterBookServer(server, &api{service: bookservice.New(cfg, log, storage, broker)})
@@ -60,6 +60,7 @@ type Servicer interface {
 
 type api struct {
 	bookrpc.UnimplementedBookServer
+
 	service Servicer
 }
 
@@ -69,7 +70,7 @@ func (a *api) Book(ctx context.Context, req *bookrpc.BookRequest) (*bookrpc.Book
 		return &bookrpc.BookResponse{}, status.Error(codes.InvalidArgument, "required request arguments must be specified")
 	}
 
-	resp, err := a.service.Book(ctx, req)
+	_, err := a.service.Book(ctx, req)
 	if err != nil {
 		// COME UP WITH A BETTER ERROR HANDLING
 

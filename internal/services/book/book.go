@@ -23,10 +23,10 @@ type Service struct {
 	Broker  Brokerer
 
 	log    *logger.Logger
-	config *utils.Config
+	config utils.Config
 }
 
-func New(cfg *utils.Config, log *logger.Logger, storage *storage.Storage, broker *broker.Broker) *Service {
+func New(cfg utils.Config, log *logger.Logger, storage *storage.Storage, broker *broker.Broker) *Service {
 	return &Service{
 		Storage: storage,
 

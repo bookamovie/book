@@ -9,16 +9,24 @@ import (
 
 type Broker struct {
 	Producer sarama.SyncProducer
+
+	config utils.Config
 }
 
-func New(cfg *utils.Config) (*Broker, error) {
-	producer, err := sarama.NewSyncProducer(cfg.KafkaConfig.Addresses, sarama.NewConfig())
+func New(cfg utils.Config) (*Broker, error) {
+	saramaCfg := sarama.NewConfig()
+
+	saramaCfg.Producer.Return.Successes = true
+
+	producer, err := sarama.NewSyncProducer(cfg.KafkaConfig.Addresses, saramaCfg)
 	if err != nil {
 		return &Broker{}, err
 	}
 
 	return &Broker{
 		Producer: producer,
+
+		config: cfg,
 	}, nil
 }
 

@@ -19,7 +19,7 @@ type App struct {
 	Broker     *broker.Broker
 
 	log    *logger.Logger
-	config *utils.Config
+	config utils.Config
 }
 
 func New() (*App, error) {

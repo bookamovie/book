@@ -15,9 +15,9 @@ var (
 )
 
 type Config struct {
-	BookConfig   *BookConfig   `yaml:"book"`
-	SQLiteConfig *SQLiteConfig `yaml:"sqlite"`
-	KafkaConfig  *KafkaConfig  `yaml:"kafka"`
+	BookConfig   BookConfig   `yaml:"book"`
+	SQLiteConfig SQLiteConfig `yaml:"sqlite"`
+	KafkaConfig  KafkaConfig  `yaml:"kafka"`
 }
 
 type BookConfig struct {
@@ -33,27 +33,27 @@ type KafkaConfig struct {
 	Addresses []string `yaml:"addresses"`
 }
 
-func LoadConfig() (*Config, error) {
+func LoadConfig() (Config, error) {
 	configPath := os.Getenv(cpEnvName)
 	if configPath == "" {
-		return &Config{}, ErrConfigPathNotSpecified
+		return Config{}, ErrConfigPathNotSpecified
 	}
 	defer os.Unsetenv(cpEnvName)
 
-	var cfg *Config
+	var cfg Config
 
 	switch configPath {
-	case "config/book_local":
-	case "config/book_dev":
-	case "config/book_prod":
-	case "config/book_custom":
+	case "config/book_local.yaml":
+	case "config/book_dev.yaml":
+	case "config/book_prod.yaml":
+	case "config/book_custom.yaml":
 	default:
-		return &Config{}, ErrConfigNotFound
+		return Config{}, ErrConfigNotFound
 	}
 
 	err := cleanenv.ReadConfig(configPath, &cfg)
 	if err != nil {
-		return &Config{}, err
+		return Config{}, err
 	}
 
 	return cfg, nil
