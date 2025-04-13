@@ -1,5 +1,7 @@
 github.com/xoticdsign/bookamovie-proto v0.0.1 h1:ZMCiYsGtMrQJn4jL2Fu3qNa75Jo3zT8rN0VvzBd4b+A=
 github.com/xoticdsign/bookamovie-proto v0.0.1/go.mod h1:N31G18bbIOqzXla0IyXvS8l0I15dDSxA7g+QoZutW2E=
+github.com/xoticdsign/bookamovie-proto v0.0.2 h1:PTJomHkyaHkjkBa+djlZj9FO8VbVwnX0U8bj/uoo/fY=
+github.com/xoticdsign/bookamovie-proto v0.0.2/go.mod h1:N31G18bbIOqzXla0IyXvS8l0I15dDSxA7g+QoZutW2E=
 golang.org/x/net v0.34.0 h1:Mb7Mrk043xzHgnRM88suvJFwzVrRfHEHJEl5/71CKw0=
 golang.org/x/net v0.34.0/go.mod h1:di0qlW3YNM5oh6GqDGQr92MyTozJPmybPK4Ev/Gm31k=
 golang.org/x/sys v0.29.0 h1:TPYlXGxvx1MGTn2GiZDhnjPA9wZzZeGKHHmKhHYvgaU=
