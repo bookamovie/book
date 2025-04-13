@@ -54,3 +54,9 @@ func (s *Service) Book(ctx context.Context, data *bookrpc.BookRequest) (*bookrpc
 
 	return &bookrpc.BookResponse{}, nil
 }
+
+type UnimplementedService struct{}
+
+func (u *UnimplementedService) Book(ctx context.Context, data *bookrpc.BookRequest) (*bookrpc.BookResponse, error) {
+	return &bookrpc.BookResponse{}, nil
+}

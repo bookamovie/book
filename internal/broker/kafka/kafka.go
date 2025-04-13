@@ -34,3 +34,7 @@ type BookNotifyEvent struct {
 func (b *Broker) BookNotify(event *BookNotifyEvent) error {
 	return nil
 }
+
+type UnimplementedBroker struct{}
+
+func (u *UnimplementedBroker) BookNotify(event *BookNotifyEvent) error { return nil }

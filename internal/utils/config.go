@@ -1,9 +1,21 @@
 package utils
 
-type Config struct {
-	LogMode string
+import (
+	"fmt"
+	"os"
 
-	BookConfig   *BookConfig   `yaml:"bookamovie"`
+	"github.com/ilyakaznacheev/cleanenv"
+)
+
+const cpEnvName = "CONFIG_PATH"
+
+var (
+	ErrConfigPathNotSpecified = fmt.Errorf("%s env variable must be specified", cpEnvName)
+	ErrConfigNotFound         = fmt.Errorf("config not found")
+)
+
+type Config struct {
+	BookConfig   *BookConfig   `yaml:"book"`
 	SQLiteConfig *SQLiteConfig `yaml:"sqlite"`
 	KafkaConfig  *KafkaConfig  `yaml:"kafka"`
 }
@@ -21,8 +33,28 @@ type KafkaConfig struct {
 	Addresses []string `yaml:"addresses"`
 }
 
-func LoadConfig() *Config {
+func LoadConfig() (*Config, error) {
+	configPath := os.Getenv(cpEnvName)
+	if configPath == "" {
+		return &Config{}, ErrConfigPathNotSpecified
+	}
+	defer os.Unsetenv(cpEnvName)
+
 	var cfg *Config
 
-	return cfg
+	switch configPath {
+	case "config/book_local":
+	case "config/book_dev":
+	case "config/book_prod":
+	case "config/book_custom":
+	default:
+		return &Config{}, ErrConfigNotFound
+	}
+
+	err := cleanenv.ReadConfig(configPath, &cfg)
+	if err != nil {
+		return &Config{}, err
+	}
+
+	return cfg, nil
 }

@@ -35,3 +35,7 @@ type BookQuery struct {
 func (s *Storage) Book(query *BookQuery) error {
 	return nil
 }
+
+type UnimplementedStorage struct{}
+
+func (u *UnimplementedStorage) Book(query *BookQuery) error { return nil }

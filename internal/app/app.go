@@ -23,9 +23,12 @@ type App struct {
 }
 
 func New() (*App, error) {
-	cfg := utils.LoadConfig()
+	cfg, err := utils.LoadConfig()
+	if err != nil {
+		return &App{}, err
+	}
 
-	log, err := logger.New(cfg.LogMode)
+	log, err := logger.New()
 	if err != nil {
 		return &App{}, err
 	}
