@@ -13,8 +13,3 @@ run_prod: $(cmd_book)
 
 run_custom: $(cmd_book)
 	CONFIG_PATH=config/book_custom.yaml LOG_MODE=custom go run $(cmd_book)
-
-# PROTO ###
-
-proto: 
- protoc --proto_path=protos/book --go_out=gen/go --go-grpc_out=gen/go book.proto
