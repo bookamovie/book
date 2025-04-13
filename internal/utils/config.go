@@ -33,7 +33,7 @@ type KafkaConfig struct {
 	Addresses []string `yaml:"addresses"`
 	Topic     string   `yaml:"topic"`
 	Offset    int64    `yaml:"offset"`
-	Partition int32    `yaml"partition"`
+	Partition int32    `yaml:"partition"`
 }
 
 func LoadConfig() (Config, error) {
