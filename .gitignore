@@ -1,8 +1,10 @@
 # FILES ######################
 
+*_log.json
+
 # LOCATIONS ##################
 
-/storage
+storage/db.sqlite
 
 # TRASH ######################
 

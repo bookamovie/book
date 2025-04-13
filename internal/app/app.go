@@ -38,7 +38,7 @@ func New() (*App, error) {
 		return &App{}, err
 	}
 
-	br, err := broker.New(cfg)
+	br, err := broker.New(cfg, log)
 	if err != nil {
 		return &App{}, err
 	}

@@ -61,7 +61,7 @@ func (s *Service) Book(ctx context.Context, data *bookrpc.BookRequest) (*bookrpc
 		Data:   data,
 	})
 	if err != nil {
-		// ERROR HANDLING
+		return &bookrpc.BookResponse{}, err
 	}
 
 	return &bookrpc.BookResponse{}, nil
