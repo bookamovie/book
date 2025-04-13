@@ -1,6 +1,6 @@
 package utils
 
-import bookamovierpc "github.com/xoticdsign/bookamovie-proto/gen/go/bookamovie/v2"
+import bookamovierpc "github.com/xoticdsign/bookamovie-proto/gen/go/bookamovie/v3"
 
 func ValidateBookRequest(req *bookamovierpc.BookRequest) bool {
 	switch {

@@ -15,7 +15,9 @@ type SQLiteConfig struct {
 	Address string `yaml:"address"`
 }
 
-type KafkaConfig struct{}
+type KafkaConfig struct {
+	Addresses []string `yaml:"addresses"`
+}
 
 func LoadConfig() *Config {
 	var cfg *Config

@@ -4,7 +4,7 @@ import (
 	"database/sql"
 
 	_ "github.com/mattn/go-sqlite3"
-	"github.com/xoticdsign/bookamovie-proto/gen/go/bookamovie/v2"
+	bookamovierpc "github.com/xoticdsign/bookamovie-proto/gen/go/bookamovie/v3"
 	"github.com/xoticdsign/bookamovie/internal/utils"
 )
 
@@ -23,6 +23,15 @@ func New(cfg *utils.Config) (*Storage, error) {
 	}, nil
 }
 
-func (s *Storage) Book(data *bookamovie.BookRequest) error {
+func (s *Storage) Shutdown() {
+	s.DB.Close()
+}
+
+type BookQuery struct {
+	Ticket string
+	Data   *bookamovierpc.BookRequest
+}
+
+func (s *Storage) Book(query *BookQuery) error {
 	return nil
 }

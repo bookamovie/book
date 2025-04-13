@@ -8,7 +8,8 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	bookamovierpc "github.com/xoticdsign/bookamovie-proto/gen/go/bookamovie/v2"
+	bookamovierpc "github.com/xoticdsign/bookamovie-proto/gen/go/bookamovie/v3"
+	broker "github.com/xoticdsign/bookamovie/internal/broker/kafka"
 	"github.com/xoticdsign/bookamovie/internal/services/bookamovieservice"
 	storage "github.com/xoticdsign/bookamovie/internal/storage/sqlite"
 	"github.com/xoticdsign/bookamovie/internal/utils"
@@ -20,10 +21,10 @@ type App struct {
 	config *utils.Config
 }
 
-func New(cfg *utils.Config, storage *storage.Storage) *App {
+func New(cfg *utils.Config, storage *storage.Storage, broker *broker.Broker) *App {
 	server := grpc.NewServer()
 
-	bookamovierpc.RegisterBookaMovieServer(server, &api{service: bookamovieservice.New(storage)})
+	bookamovierpc.RegisterBookaMovieServer(server, &api{service: bookamovieservice.New(storage, broker)})
 
 	return &App{
 		Server: server,

@@ -6,26 +6,36 @@ import (
 	"syscall"
 
 	"github.com/xoticdsign/bookamovie/internal/app/bookamovieapp"
+	broker "github.com/xoticdsign/bookamovie/internal/broker/kafka"
 	storage "github.com/xoticdsign/bookamovie/internal/storage/sqlite"
 	"github.com/xoticdsign/bookamovie/internal/utils"
 )
 
 type App struct {
 	BookaMovie *bookamovieapp.App
+	Storage    *storage.Storage
+	Broker     *broker.Broker
 }
 
 func New() (*App, error) {
 	cfg := utils.LoadConfig()
 
-	storage, err := storage.New(cfg)
+	s, err := storage.New(cfg)
 	if err != nil {
 		return &App{}, err
 	}
 
-	bookamovie := bookamovieapp.New(cfg, storage)
+	b, err := broker.New(cfg)
+	if err != nil {
+		return &App{}, err
+	}
+
+	bookamovie := bookamovieapp.New(cfg, s, b)
 
 	return &App{
 		BookaMovie: bookamovie,
+		Storage:    s,
+		Broker:     b,
 	}, nil
 }
 
@@ -50,9 +60,11 @@ func (a *App) Run() {
 		// LOG ERROR
 	}
 
-	shutdown(a.BookaMovie)
+	shutdown(a.BookaMovie, a.Storage, a.Broker)
 }
 
-func shutdown(bookamovie *bookamovieapp.App) {
+func shutdown(bookamovie *bookamovieapp.App, storage *storage.Storage, broker *broker.Broker) {
+	broker.Shutdown()
+	storage.Shutdown()
 	bookamovie.Shutdown()
 }
