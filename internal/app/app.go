@@ -6,6 +6,7 @@ import (
 	"syscall"
 
 	"github.com/xoticdsign/bookamovie/internal/app/bookamovieapp"
+	storage "github.com/xoticdsign/bookamovie/internal/storage/sqlite"
 	"github.com/xoticdsign/bookamovie/internal/utils"
 )
 
@@ -13,14 +14,19 @@ type App struct {
 	BookaMovie *bookamovieapp.App
 }
 
-func New() *App {
+func New() (*App, error) {
 	cfg := utils.LoadConfig()
 
-	bookamovie := bookamovieapp.New(cfg)
+	storage, err := storage.New(cfg)
+	if err != nil {
+		return &App{}, err
+	}
+
+	bookamovie := bookamovieapp.New(cfg, storage)
 
 	return &App{
 		BookaMovie: bookamovie,
-	}
+	}, nil
 }
 
 func (a *App) Run() {

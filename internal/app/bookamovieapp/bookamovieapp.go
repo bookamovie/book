@@ -9,6 +9,8 @@ import (
 	"google.golang.org/grpc/status"
 
 	bookamovierpc "github.com/xoticdsign/bookamovie-proto/gen/go/bookamovie/v2"
+	"github.com/xoticdsign/bookamovie/internal/services/bookamovieservice"
+	storage "github.com/xoticdsign/bookamovie/internal/storage/sqlite"
 	"github.com/xoticdsign/bookamovie/internal/utils"
 )
 
@@ -18,10 +20,10 @@ type App struct {
 	config *utils.Config
 }
 
-func New(cfg *utils.Config) *App {
+func New(cfg *utils.Config, storage *storage.Storage) *App {
 	server := grpc.NewServer()
 
-	bookamovierpc.RegisterBookaMovieServer(server, &api{})
+	bookamovierpc.RegisterBookaMovieServer(server, &api{service: bookamovieservice.New(storage)})
 
 	return &App{
 		Server: server,
@@ -49,7 +51,7 @@ func (a *App) Shutdown() {
 }
 
 type Servicer interface {
-	Book(ctx context.Context, req *bookamovierpc.BookRequest) (*bookamovierpc.BookResponse, error)
+	Book(ctx context.Context, data *bookamovierpc.BookRequest) (*bookamovierpc.BookResponse, error)
 }
 
 type api struct {

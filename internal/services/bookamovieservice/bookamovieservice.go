@@ -6,12 +6,24 @@ import (
 	bookamovierpc "github.com/xoticdsign/bookamovie-proto/gen/go/bookamovie/v2"
 )
 
-type Service struct{}
-
-func New() *Service {
-	return &Service{}
+type Querier interface {
+	Book(data *bookamovierpc.BookRequest) error
 }
 
-func (s *Service) Book(ctx context.Context, req *bookamovierpc.BookRequest) (*bookamovierpc.BookResponse, error) {
+type Service struct {
+	Storage Querier
+}
+
+func New(storage Querier) *Service {
+	return &Service{
+		Storage: storage,
+	}
+}
+
+func (s *Service) Book(ctx context.Context, data *bookamovierpc.BookRequest) (*bookamovierpc.BookResponse, error) {
+	err := s.Storage.Book(data)
+	if err != nil {
+		// ERROR HANDLING
+	}
 	return &bookamovierpc.BookResponse{}, nil
 }

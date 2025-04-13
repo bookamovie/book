@@ -1,3 +1,5 @@
+github.com/mattn/go-sqlite3 v1.14.27 h1:drZCnuvf37yPfs95E5jd9s3XhdVWLal+6BOK6qrv6IU=
+github.com/mattn/go-sqlite3 v1.14.27/go.mod h1:Uh1q+B4BYcTPb+yiD3kU8Ct7aC0hY9fxUwlHK0RXw+Y=
 github.com/xoticdsign/bookamovie-proto v0.0.1 h1:ZMCiYsGtMrQJn4jL2Fu3qNa75Jo3zT8rN0VvzBd4b+A=
 github.com/xoticdsign/bookamovie-proto v0.0.1/go.mod h1:N31G18bbIOqzXla0IyXvS8l0I15dDSxA7g+QoZutW2E=
 github.com/xoticdsign/bookamovie-proto v0.0.2 h1:PTJomHkyaHkjkBa+djlZj9FO8VbVwnX0U8bj/uoo/fY=
