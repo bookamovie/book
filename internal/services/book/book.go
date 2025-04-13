@@ -2,12 +2,19 @@ package book
 
 import (
 	"context"
+	"errors"
+	"fmt"
 
+	"github.com/thanhpk/randstr"
 	broker "github.com/xoticdsign/book/internal/broker/kafka"
 	"github.com/xoticdsign/book/internal/lib/logger"
 	storage "github.com/xoticdsign/book/internal/storage/sqlite"
 	"github.com/xoticdsign/book/internal/utils"
 	bookrpc "github.com/xoticdsign/bookamovie-proto/gen/go/book/v3"
+)
+
+var (
+	ErrDuplicateOrder = fmt.Errorf("order duplicated")
 )
 
 type Querier interface {
@@ -36,17 +43,22 @@ func New(cfg utils.Config, log *logger.Logger, storage *storage.Storage, broker 
 }
 
 func (s *Service) Book(ctx context.Context, data *bookrpc.BookRequest) (*bookrpc.BookResponse, error) {
+	ticket := randstr.Dec(12)
+
 	err := s.Storage.Book(&storage.BookQuery{
-		Ticket:/* TICKET GEN */ "",
-		Data: data,
+		Ticket: ticket,
+		Data:   data,
 	})
 	if err != nil {
-		// ERROR HANDLING
+		if errors.Is(err, storage.ErrAlreadyExists) {
+			return &bookrpc.BookResponse{}, ErrDuplicateOrder
+		}
+		return &bookrpc.BookResponse{}, err
 	}
 
 	err = s.Broker.BookNotify(&broker.BookNotifyEvent{
-		Ticket:/* TICKET GEN */ "",
-		Data: data,
+		Ticket: ticket,
+		Data:   data,
 	})
 	if err != nil {
 		// ERROR HANDLING

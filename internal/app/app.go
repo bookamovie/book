@@ -33,7 +33,7 @@ func New() (*App, error) {
 		return &App{}, err
 	}
 
-	s, err := storage.New(cfg)
+	s, err := storage.New(cfg, log)
 	if err != nil {
 		return &App{}, err
 	}

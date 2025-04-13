@@ -2,6 +2,7 @@ package book
 
 import (
 	"context"
+	"errors"
 	"net"
 
 	"google.golang.org/grpc"
@@ -70,12 +71,16 @@ func (a *api) Book(ctx context.Context, req *bookrpc.BookRequest) (*bookrpc.Book
 		return &bookrpc.BookResponse{}, status.Error(codes.InvalidArgument, "required request arguments must be specified")
 	}
 
-	_, err := a.service.Book(ctx, req)
+	resp, err := a.service.Book(ctx, req)
 	if err != nil {
-		// COME UP WITH A BETTER ERROR HANDLING
+		switch {
+		case errors.Is(err, bookservice.ErrDuplicateOrder):
+			return &bookrpc.BookResponse{}, status.Error(codes.AlreadyExists, bookservice.ErrDuplicateOrder.Error())
 
-		return &bookrpc.BookResponse{}, status.Error(codes.Internal, "internal error")
+		default:
+			return &bookrpc.BookResponse{}, status.Error(codes.Internal, "internal error")
+		}
 	}
 
-	return &bookrpc.BookResponse{}, nil
+	return resp, nil
 }
