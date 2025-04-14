@@ -30,6 +30,7 @@ func New(cfg utils.Config, log *logger.Logger) (*Broker, error) {
 	return &Broker{
 		Producer: producer,
 
+		log:    log,
 		config: cfg,
 	}, nil
 }

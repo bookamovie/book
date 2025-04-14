@@ -63,6 +63,12 @@ func (a *App) Run() {
 
 	errChan := make(chan error, 1)
 
+	a.log.Logs.AppLog.Info(
+		"starting an app",
+		slog.String("op", op),
+		slog.Any("config", a.config),
+	)
+
 	go func() {
 		err := a.BookaMovie.Run()
 		if err != nil {

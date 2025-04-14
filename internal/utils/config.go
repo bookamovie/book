@@ -46,17 +46,17 @@ func LoadConfig() (Config, error) {
 	var cfg Config
 
 	switch configPath {
-	case "config/book_local.yaml":
-	case "config/book_dev.yaml":
-	case "config/book_prod.yaml":
-	case "config/book_custom.yaml":
+	case "config/local.yaml":
+	case "config/dev.yaml":
+	case "config/prod.yaml":
+	case "config/custom.yaml":
 	default:
 		return Config{}, ErrConfigNotFound
 	}
 
 	err := cleanenv.ReadConfig(configPath, &cfg)
 	if err != nil {
-		return Config{}, err
+		return Config{}, ErrConfigNotFound
 	}
 
 	return cfg, nil

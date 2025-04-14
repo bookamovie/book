@@ -3,18 +3,14 @@ package book
 import (
 	"context"
 	"errors"
-	"fmt"
 
+	"github.com/mattn/go-sqlite3"
 	"github.com/thanhpk/randstr"
 	broker "github.com/xoticdsign/book/internal/broker/kafka"
 	"github.com/xoticdsign/book/internal/lib/logger"
 	storage "github.com/xoticdsign/book/internal/storage/sqlite"
 	"github.com/xoticdsign/book/internal/utils"
 	bookrpc "github.com/xoticdsign/bookamovie-proto/gen/go/book/v3"
-)
-
-var (
-	ErrDuplicateOrder = fmt.Errorf("order duplicated")
 )
 
 type Querier interface {
@@ -36,6 +32,7 @@ type Service struct {
 func New(cfg utils.Config, log *logger.Logger, storage *storage.Storage, broker *broker.Broker) *Service {
 	return &Service{
 		Storage: storage,
+		Broker:  broker,
 
 		log:    log,
 		config: cfg,
@@ -50,8 +47,8 @@ func (s *Service) Book(ctx context.Context, data *bookrpc.BookRequest) (*bookrpc
 		Data:   data,
 	})
 	if err != nil {
-		if errors.Is(err, storage.ErrAlreadyExists) {
-			return &bookrpc.BookResponse{}, ErrDuplicateOrder
+		if errors.Is(err, sqlite3.ErrConstraintUnique) {
+			return &bookrpc.BookResponse{}, err
 		}
 		return &bookrpc.BookResponse{}, err
 	}
@@ -64,7 +61,11 @@ func (s *Service) Book(ctx context.Context, data *bookrpc.BookRequest) (*bookrpc
 		return &bookrpc.BookResponse{}, err
 	}
 
-	return &bookrpc.BookResponse{}, nil
+	return &bookrpc.BookResponse{
+		Order: &bookrpc.Order{
+			Ticket: ticket,
+		},
+	}, nil
 }
 
 type UnimplementedService struct{}

@@ -13,7 +13,7 @@ const lmEnvName = "LOG_MODE"
 
 var (
 	ErrLogModeNotSpecified = fmt.Errorf("%s env variable must be specified", lmEnvName)
-	ErrWrongLogger         = fmt.Errorf("specified logger does not exists")
+	ErrWrongLogger         = fmt.Errorf("specified log mode does not exists")
 )
 
 type Logger struct {
@@ -72,15 +72,20 @@ func New() (*Logger, error) {
 		}))
 
 	case "dev":
-		b, err = utils.OpenLog("book_dev_log.json")
+		err = os.MkdirAll("log/dev", 0777)
 		if err != nil {
 			return &Logger{}, err
 		}
-		s, err = utils.OpenLog("storage_dev_log.json")
+
+		b, err = utils.OpenLog("log/dev/book.log")
 		if err != nil {
 			return &Logger{}, err
 		}
-		br, err = utils.OpenLog("broker_dev_log_dev.json")
+		s, err = utils.OpenLog("log/dev/storage.log")
+		if err != nil {
+			return &Logger{}, err
+		}
+		br, err = utils.OpenLog("log/dev/broker.log")
 		if err != nil {
 			return &Logger{}, err
 		}
@@ -98,15 +103,20 @@ func New() (*Logger, error) {
 		}))
 
 	case "prod":
-		b, err = utils.OpenLog("book_prod_log.json")
+		err = os.MkdirAll("log", 0777)
 		if err != nil {
 			return &Logger{}, err
 		}
-		s, err = utils.OpenLog("storage_prod_log.json")
+
+		b, err = utils.OpenLog("log/book.log")
 		if err != nil {
 			return &Logger{}, err
 		}
-		br, err = utils.OpenLog("broker_prod_log.json")
+		s, err = utils.OpenLog("log/storage.log")
+		if err != nil {
+			return &Logger{}, err
+		}
+		br, err = utils.OpenLog("log/broker.log")
 		if err != nil {
 			return &Logger{}, err
 		}

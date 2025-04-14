@@ -2,17 +2,13 @@ package sqlite
 
 import (
 	"database/sql"
-	"fmt"
 	"log/slog"
 
+	"github.com/mattn/go-sqlite3"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/xoticdsign/book/internal/lib/logger"
 	"github.com/xoticdsign/book/internal/utils"
 	bookrpc "github.com/xoticdsign/bookamovie-proto/gen/go/book/v3"
-)
-
-var (
-	ErrAlreadyExists = fmt.Errorf("data already exists in the database")
 )
 
 type Storage struct {
@@ -31,6 +27,7 @@ func New(cfg utils.Config, log *logger.Logger) (*Storage, error) {
 	return &Storage{
 		DB: db,
 
+		log:    log,
 		config: cfg,
 	}, nil
 }
@@ -59,15 +56,18 @@ func (s *Storage) Book(query *BookQuery) error {
 	}
 	defer tx.Rollback()
 
-	stmt, err := tx.Prepare(`INSERT INTO bookings (id, movie, screen, seat, date, cinema, location)
-	SELECT ?, ?, ?, ?, ?, ?, ?
+	stmt, err := tx.Prepare(`INSERT INTO bookings (id, movie, screen, seat, date, cinema, location) 
+	SELECT ?, ?, ?, ?, ?, ?, ? 
 	WHERE (
-	(SELECT COUNT(*) FROM bookings 
+	(SELECT COUNT(*) 
+	FROM bookings 
 	WHERE screen = ? AND date = ? AND cinema = ? AND location = ?) 
-	<
-	(SELECT seats FROM screens
-   	WHERE screen = ? AND cinema = ? AND location = ?)
+	< 
+    (SELECT seats 
+	FROM screens 
+	WHERE screen = ? AND cinema = ? AND location = ?)
 	);`)
+
 	if err != nil {
 		s.log.Logs.StorageLog.Error(
 			"can't prepare a statement",
@@ -84,11 +84,11 @@ func (s *Storage) Book(query *BookQuery) error {
 		query.Data.Movie.Title,
 		query.Data.Session.Screen,
 		query.Data.Session.Seat,
-		query.Data.Session.Date,
+		query.Data.Session.Date.AsTime(),
 		query.Data.Cinema.Name,
 		query.Data.Cinema.Location,
 		query.Data.Session.Screen,
-		query.Data.Session.Date,
+		query.Data.Session.Date.AsTime(),
 		query.Data.Cinema.Name,
 		query.Data.Cinema.Location,
 		query.Data.Session.Screen,
@@ -101,17 +101,18 @@ func (s *Storage) Book(query *BookQuery) error {
 			slog.String("op", op),
 			slog.String("error", err.Error()),
 		)
+
 		return err
 	}
 
 	affected, _ := res.RowsAffected()
 	if affected == 0 {
 		s.log.Logs.StorageLog.Warn(
-			ErrAlreadyExists.Error(),
+			sqlite3.ErrConstraintUnique.Error(),
 			slog.String("op", op),
 		)
 
-		return ErrAlreadyExists
+		return sqlite3.ErrConstraintUnique
 	}
 
 	return tx.Commit()
