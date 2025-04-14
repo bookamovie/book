@@ -3,6 +3,7 @@ package book
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/mattn/go-sqlite3"
 	"github.com/thanhpk/randstr"
@@ -11,6 +12,10 @@ import (
 	storage "github.com/xoticdsign/book/internal/storage/sqlite"
 	"github.com/xoticdsign/book/internal/utils"
 	bookrpc "github.com/xoticdsign/bookamovie-proto/gen/go/book/v3"
+)
+
+var (
+	ErrDuplicate = fmt.Errorf("this order already exists")
 )
 
 type Querier interface {
@@ -48,7 +53,7 @@ func (s *Service) Book(ctx context.Context, data *bookrpc.BookRequest) (*bookrpc
 	})
 	if err != nil {
 		if errors.Is(err, sqlite3.ErrConstraintUnique) {
-			return &bookrpc.BookResponse{}, err
+			return &bookrpc.BookResponse{}, ErrDuplicate
 		}
 		return &bookrpc.BookResponse{}, err
 	}

@@ -74,8 +74,8 @@ func (a *api) Book(ctx context.Context, req *bookrpc.BookRequest) (*bookrpc.Book
 	resp, err := a.service.Book(ctx, req)
 	if err != nil {
 		switch {
-		case errors.Is(err, bookservice.ErrDuplicateOrder):
-			return &bookrpc.BookResponse{}, status.Error(codes.AlreadyExists, bookservice.ErrDuplicateOrder.Error())
+		case errors.Is(err, bookservice.ErrDuplicate):
+			return &bookrpc.BookResponse{}, status.Error(codes.AlreadyExists, bookservice.ErrDuplicate.Error())
 
 		default:
 			return &bookrpc.BookResponse{}, status.Error(codes.Internal, "internal error")
