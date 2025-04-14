@@ -17,6 +17,9 @@ import (
 	bookrpc "github.com/xoticdsign/bookamovie-proto/gen/go/book/v3"
 )
 
+// App{} represents the gRPC server application for the book service.
+//
+// It handles configuration, logging, and startup/shutdown lifecycle.
 type App struct {
 	Server *grpc.Server
 
@@ -24,6 +27,9 @@ type App struct {
 	config utils.Config
 }
 
+// New() initializes and returns a new instance of the book gRPC App.
+//
+// It wires together logging, configuration, storage, and message broker.
 func New(log *logger.Logger, cfg utils.Config, storage *storage.Storage, broker *broker.Broker) *App {
 	server := grpc.NewServer()
 
@@ -37,6 +43,9 @@ func New(log *logger.Logger, cfg utils.Config, storage *storage.Storage, broker 
 	}
 }
 
+// Run() starts the gRPC server using the configured network and address.
+//
+// It blocks and returns any critical error if the server fails to start.
 func (a *App) Run() error {
 	listener, err := net.Listen(a.config.BookConfig.Network, a.config.BookConfig.Address)
 	if err != nil {
@@ -51,20 +60,30 @@ func (a *App) Run() error {
 	return nil
 }
 
+// Shutdown() gracefully stops the gRPC server.
 func (a *App) Shutdown() {
 	a.Server.GracefulStop()
 }
 
+// Servicer() defines the interface for the booking service logic.
+//
+// It is implemented by the internal book service layer.
 type Servicer interface {
 	Book(ctx context.Context, data *bookrpc.BookRequest) (*bookrpc.BookResponse, error)
 }
 
+// api{} is the gRPC handler for the Book service.
+//
+// It adapts incoming gRPC calls to the internal Servicer logic.
 type api struct {
 	bookrpc.UnimplementedBookServer
 
 	service Servicer
 }
 
+// Book() handles incoming gRPC requests to book a movie ticket.
+//
+// It validates input and delegates to the business logic service layer. Returns appropriate gRPC errors for invalid or duplicate requests.
 func (a *api) Book(ctx context.Context, req *bookrpc.BookRequest) (*bookrpc.BookResponse, error) {
 	ok := utils.ValidateBookRequest(req)
 	if !ok {

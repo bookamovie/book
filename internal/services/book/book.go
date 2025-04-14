@@ -18,14 +18,17 @@ var (
 	ErrDuplicate = fmt.Errorf("this order already exists")
 )
 
+// Querier{} abstracts the interface for the storage layer's booking method.
 type Querier interface {
 	Book(query *storage.BookQuery) error
 }
 
+// Brokerer{} abstracts the broker (e.g., Kafka) interface for sending booking events.
 type Brokerer interface {
 	BookNotify(event *broker.BookNotifyEvent) error
 }
 
+// Service{} handles business logic for booking operations.
 type Service struct {
 	Storage Querier
 	Broker  Brokerer
@@ -34,6 +37,7 @@ type Service struct {
 	config utils.Config
 }
 
+// New() creates and returns a new Service instance with dependencies injected.
 func New(cfg utils.Config, log *logger.Logger, storage *storage.Storage, broker *broker.Broker) *Service {
 	return &Service{
 		Storage: storage,
@@ -44,6 +48,9 @@ func New(cfg utils.Config, log *logger.Logger, storage *storage.Storage, broker 
 	}
 }
 
+// Book() processes a booking request: generates a ticket, stores the data, and notifies the broker.
+//
+// Returns a BookResponse with the generated ticket or an error if the operation fails.
 func (s *Service) Book(ctx context.Context, data *bookrpc.BookRequest) (*bookrpc.BookResponse, error) {
 	ticket := randstr.Dec(12)
 
@@ -73,8 +80,14 @@ func (s *Service) Book(ctx context.Context, data *bookrpc.BookRequest) (*bookrpc
 	}, nil
 }
 
+// UnimplementedService{} is a placeholder implementation of the service.
+//
+// Useful for testing or when mocking is required.
 type UnimplementedService struct{}
 
+// Book() returns an empty BookResponse and no error.
+//
+// This satisfies the Servicer interface without performing any logic.
 func (u *UnimplementedService) Book(ctx context.Context, data *bookrpc.BookRequest) (*bookrpc.BookResponse, error) {
 	return &bookrpc.BookResponse{}, nil
 }

@@ -10,6 +10,7 @@ import (
 	bookrpc "github.com/xoticdsign/bookamovie-proto/gen/go/book/v3"
 )
 
+// Broker{} represents a Kafka message broker that handles producing booking events to a Kafka topic.
 type Broker struct {
 	Producer sarama.SyncProducer
 
@@ -17,6 +18,9 @@ type Broker struct {
 	config utils.Config
 }
 
+// New() initializes and returns a new Kafka Broker with the given configuration.
+//
+// It creates a new synchronous Kafka producer using Sarama.
 func New(cfg utils.Config, log *logger.Logger) (*Broker, error) {
 	saramaCfg := sarama.NewConfig()
 
@@ -35,15 +39,20 @@ func New(cfg utils.Config, log *logger.Logger) (*Broker, error) {
 	}, nil
 }
 
+// Shutdown() gracefully closes the Kafka producer connection.
 func (b *Broker) Shutdown() {
 	b.Producer.Close()
 }
 
+// BookNotifyEvent{} represents the data structure of a booking event that will be published to the Kafka topic.
 type BookNotifyEvent struct {
 	Ticket string
 	Data   *bookrpc.BookRequest
 }
 
+// BookNotify() sends a BookNotifyEvent to the configured Kafka topic.
+//
+// It serializes the event to JSON and logs success or failure.
 func (b *Broker) BookNotify(event *BookNotifyEvent) error {
 	const op = "BookNotify()"
 
@@ -73,6 +82,10 @@ func (b *Broker) BookNotify(event *BookNotifyEvent) error {
 	return nil
 }
 
+// UnimplementedBroker{} is a stub that implements the Broker interface
+//
+// but does nothing. Useful for testing or placeholder functionality.
 type UnimplementedBroker struct{}
 
+// BookNotify() is the no-op implementation for the BookNotify method.
 func (u *UnimplementedBroker) BookNotify(event *BookNotifyEvent) error { return nil }

@@ -16,11 +16,15 @@ var (
 	ErrWrongLogger         = fmt.Errorf("specified log mode does not exists")
 )
 
+// Logger{} is the central logging component for the app.
+//
+// It holds references to individual subsystem loggers and file handles.
 type Logger struct {
 	Logs     Logs
 	LogFiles []*os.File
 }
 
+// Logs{} contains loggers categorized by system component.
 type Logs struct {
 	AppLog     *slog.Logger
 	BookLog    *slog.Logger
@@ -28,6 +32,7 @@ type Logs struct {
 	BrokerLog  *slog.Logger
 }
 
+// silentHandler{} is a no-op slog handler that discards all logs.
 type silentHandler struct{}
 
 func (s silentHandler) Enabled(_ context.Context, _ slog.Level) bool  { return false }
@@ -35,6 +40,13 @@ func (s silentHandler) Handle(_ context.Context, _ slog.Record) error { return n
 func (s silentHandler) WithAttrs(_ []slog.Attr) slog.Handler          { return s }
 func (s silentHandler) WithGroup(_ string) slog.Handler               { return s }
 
+// New() initializes and returns a configured Logger based on the LOG_MODE environment variable.
+//
+// It supports multiple modes: "silent", "local", "dev", and "prod".
+//   - silent: disables all logs except AppLog.
+//   - local: prints all logs to stdout.
+//   - dev: writes logs to JSON files in log/dev/.
+//   - prod: writes logs to JSON files in log/.
 func New() (*Logger, error) {
 	logMode := os.Getenv(lmEnvName)
 	if logMode == "" {
@@ -156,6 +168,7 @@ func New() (*Logger, error) {
 	}, nil
 }
 
+// Shutdown() closes any log files opened by the logger.
 func (l *Logger) Shutdown() {
 	for _, file := range l.LogFiles {
 		file.Close()

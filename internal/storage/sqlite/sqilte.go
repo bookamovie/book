@@ -11,6 +11,7 @@ import (
 	bookrpc "github.com/xoticdsign/bookamovie-proto/gen/go/book/v3"
 )
 
+// Storage{} handles interaction with the SQLite database.
 type Storage struct {
 	DB *sql.DB
 
@@ -18,6 +19,7 @@ type Storage struct {
 	config utils.Config
 }
 
+// New() initializes and returns a new Storage instance using the given config and logger.
 func New(cfg utils.Config, log *logger.Logger) (*Storage, error) {
 	db, err := sql.Open("sqlite3", cfg.SQLiteConfig.Address)
 	if err != nil {
@@ -32,15 +34,20 @@ func New(cfg utils.Config, log *logger.Logger) (*Storage, error) {
 	}, nil
 }
 
+// Shutdown() gracefully closes the database connection.
 func (s *Storage) Shutdown() {
 	s.DB.Close()
 }
 
+// BookQuery{} contains all necessary information for creating a booking.
 type BookQuery struct {
 	Ticket string
 	Data   *bookrpc.BookRequest
 }
 
+// Book() inserts a new booking into the database.
+//
+// It ensures the screen has capacity available before inserting. Returns an error if the insertion fails or constraints are violated.
 func (s *Storage) Book(query *BookQuery) error {
 	const op = "Book()"
 
@@ -118,6 +125,10 @@ func (s *Storage) Book(query *BookQuery) error {
 	return tx.Commit()
 }
 
+// UnimplementedStorage{} is a stub that satisfies the storage interface.
+//
+// Useful for testing or mock implementations.
 type UnimplementedStorage struct{}
 
+// Book() is a dummy implementation of the Book method, returning nil.
 func (u *UnimplementedStorage) Book(query *BookQuery) error { return nil }

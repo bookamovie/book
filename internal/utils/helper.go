@@ -2,6 +2,9 @@ package utils
 
 import bookrpc "github.com/xoticdsign/bookamovie-proto/gen/go/book/v3"
 
+// ValidateBookRequest() validates the fields in the BookRequest to ensure all required information is provided.
+//
+// It checks whether the cinema name, movie title, session seat, screen, and session date are properly set.
 func ValidateBookRequest(req *bookrpc.BookRequest) bool {
 	switch {
 	case req.GetCinema().GetName() == "":

@@ -13,6 +13,9 @@ import (
 	"github.com/xoticdsign/book/internal/utils"
 )
 
+// App{} coordinates the main components of the bookamovie service.
+//
+// It contains the gRPC application logic, storage backend, broker, and shared logger/config.
 type App struct {
 	BookaMovie *bookapp.App
 	Storage    *storage.Storage
@@ -22,6 +25,9 @@ type App struct {
 	config utils.Config
 }
 
+// New() initializes the App with all necessary components.
+//
+// It loads config, sets up logging, storage, broker, and gRPC logic. Returns a pointer to App or an error on failure.
 func New() (*App, error) {
 	cfg, err := utils.LoadConfig()
 	if err != nil {
@@ -55,6 +61,9 @@ func New() (*App, error) {
 	}, nil
 }
 
+// Run() starts the App, launching the gRPC server and listening for OS shutdown signals.
+//
+// It blocks until an interrupt or error occurs, then gracefully shuts everything down.
 func (a *App) Run() {
 	const op = "Run()"
 
@@ -99,6 +108,9 @@ func (a *App) Run() {
 	)
 }
 
+// shutdown() gracefully shuts down all services in the correct order:
+//
+// broker → storage → gRPC app → logger.
 func shutdown(log *logger.Logger, bookamovie *bookapp.App, storage *storage.Storage, broker *broker.Broker) {
 	broker.Shutdown()
 	storage.Shutdown()

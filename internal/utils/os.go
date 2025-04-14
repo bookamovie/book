@@ -4,6 +4,9 @@ import (
 	"os"
 )
 
+// OpenLog() opens a log file at the specified path. If the file does not exist, it will be created.
+//
+// The file is opened with write-only and append-only permissions, and the file permissions are set to 0777. It returns the opened file and any error that occurred during the process.
 func OpenLog(path string) (*os.File, error) {
 	var file *os.File
 	var err error
