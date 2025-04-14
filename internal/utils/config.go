@@ -11,6 +11,7 @@ const cpEnvName = "CONFIG_PATH"
 
 var (
 	ErrConfigPathNotSpecified = fmt.Errorf("%s env variable must be specified", cpEnvName)
+	ErrConfigCantBeUsed       = fmt.Errorf("this config can't be used")
 	ErrConfigNotFound         = fmt.Errorf("config not found")
 )
 
@@ -57,8 +58,9 @@ func LoadConfig() (Config, error) {
 	case "config/dev.yaml":
 	case "config/prod.yaml":
 	case "config/custom.yaml":
+	case "config/test.yaml":
 	default:
-		return Config{}, ErrConfigNotFound
+		return Config{}, ErrConfigCantBeUsed
 	}
 
 	err := cleanenv.ReadConfig(configPath, &cfg)

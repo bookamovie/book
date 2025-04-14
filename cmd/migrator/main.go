@@ -1,17 +1,37 @@
 package main
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/sqlite3"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
 const (
-	migrations = "migrations/sqlite"
-	storage    = "storage/db.sqlite"
+	mEnvName = "MIGRATIONS"
+	sEnvName = "STORAGE"
+)
+
+var (
+	ErrMigrationsNotSpecified = fmt.Errorf("%s env variable must be specified", mEnvName)
+	ErrStorageNotSpecified    = fmt.Errorf("%s env variable must be specified", sEnvName)
 )
 
 func main() {
+	migrations := os.Getenv(mEnvName)
+	if migrations == "" {
+		panic(ErrMigrationsNotSpecified)
+	}
+	defer os.Unsetenv(mEnvName)
+
+	storage := os.Getenv(sEnvName)
+	if storage == "" {
+		panic(ErrStorageNotSpecified)
+	}
+	defer os.Unsetenv(sEnvName)
+
 	m, err := migrate.New("file://"+migrations, "sqlite3://"+storage)
 	if err != nil {
 		panic(err)

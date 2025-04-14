@@ -21,29 +21,31 @@ var (
 // Querier{} abstracts the interface for the storage layer's booking method.
 type Querier interface {
 	Book(query *storage.BookQuery) error
+	Shutdown()
 }
 
 // Brokerer{} abstracts the broker (e.g., Kafka) interface for sending booking events.
 type Brokerer interface {
 	BookNotify(event *broker.BookNotifyEvent) error
+	Shutdown()
 }
 
 // Service{} handles business logic for booking operations.
 type Service struct {
 	Storage Querier
 	Broker  Brokerer
+	Log     *logger.Logger
 
-	log    *logger.Logger
 	config utils.Config
 }
 
 // New() creates and returns a new Service instance with dependencies injected.
-func New(cfg utils.Config, log *logger.Logger, storage *storage.Storage, broker *broker.Broker) *Service {
+func New(cfg utils.Config, log *logger.Logger, s Querier, br Brokerer) *Service {
 	return &Service{
-		Storage: storage,
-		Broker:  broker,
+		Storage: s,
+		Broker:  br,
+		Log:     log,
 
-		log:    log,
 		config: cfg,
 	}
 }

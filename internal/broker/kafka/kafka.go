@@ -13,8 +13,8 @@ import (
 // Broker{} represents a Kafka message broker that handles producing booking events to a Kafka topic.
 type Broker struct {
 	Producer sarama.SyncProducer
+	Log      *logger.Logger
 
-	log    *logger.Logger
 	config utils.Config
 }
 
@@ -33,8 +33,8 @@ func New(cfg utils.Config, log *logger.Logger) (*Broker, error) {
 
 	return &Broker{
 		Producer: producer,
+		Log:      log,
 
-		log:    log,
 		config: cfg,
 	}, nil
 }
@@ -63,7 +63,7 @@ func (b *Broker) BookNotify(event *BookNotifyEvent) error {
 		Partition: b.config.KafkaConfig.Partition,
 	})
 	if err != nil {
-		b.log.Logs.BrokerLog.Error(
+		b.Log.Logs.BrokerLog.Error(
 			"can't produce a message",
 			slog.String("op", op),
 			slog.String("error", err.Error()),
@@ -71,7 +71,7 @@ func (b *Broker) BookNotify(event *BookNotifyEvent) error {
 
 		return err
 	}
-	b.log.Logs.BookLog.Debug(
+	b.Log.Logs.BookLog.Debug(
 		"message produced",
 		slog.String("op", op),
 		slog.Any("partition", partition),
@@ -89,3 +89,6 @@ type UnimplementedBroker struct{}
 
 // BookNotify() is the no-op implementation for the BookNotify method.
 func (u *UnimplementedBroker) BookNotify(event *BookNotifyEvent) error { return nil }
+
+// Shutdown() is the no-op implementation for the Shutdown method.
+func (u *UnimplementedBroker) Shutdown() {}

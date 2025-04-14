@@ -9,10 +9,8 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	broker "github.com/xoticdsign/book/internal/broker/kafka"
 	"github.com/xoticdsign/book/internal/lib/logger"
 	bookservice "github.com/xoticdsign/book/internal/services/book"
-	storage "github.com/xoticdsign/book/internal/storage/sqlite"
 	"github.com/xoticdsign/book/internal/utils"
 	bookrpc "github.com/xoticdsign/bookamovie-proto/gen/go/book/v3"
 )
@@ -22,23 +20,23 @@ import (
 // It handles configuration, logging, and startup/shutdown lifecycle.
 type App struct {
 	Server *grpc.Server
+	Log    *logger.Logger
 
-	log    *logger.Logger
 	config utils.Config
 }
 
 // New() initializes and returns a new instance of the book gRPC App.
 //
 // It wires together logging, configuration, storage, and message broker.
-func New(log *logger.Logger, cfg utils.Config, storage *storage.Storage, broker *broker.Broker) *App {
+func New(log *logger.Logger, cfg utils.Config, storage bookservice.Querier, broker bookservice.Brokerer) *App {
 	server := grpc.NewServer()
 
-	bookrpc.RegisterBookServer(server, &api{service: bookservice.New(cfg, log, storage, broker)})
+	bookrpc.RegisterBookServer(server, &Api{Service: bookservice.New(cfg, log, storage, broker)})
 
 	return &App{
 		Server: server,
+		Log:    log,
 
-		log:    log,
 		config: cfg,
 	}
 }
@@ -75,22 +73,22 @@ type Servicer interface {
 // api{} is the gRPC handler for the Book service.
 //
 // It adapts incoming gRPC calls to the internal Servicer logic.
-type api struct {
+type Api struct {
 	bookrpc.UnimplementedBookServer
 
-	service Servicer
+	Service Servicer
 }
 
 // Book() handles incoming gRPC requests to book a movie ticket.
 //
 // It validates input and delegates to the business logic service layer. Returns appropriate gRPC errors for invalid or duplicate requests.
-func (a *api) Book(ctx context.Context, req *bookrpc.BookRequest) (*bookrpc.BookResponse, error) {
+func (a *Api) Book(ctx context.Context, req *bookrpc.BookRequest) (*bookrpc.BookResponse, error) {
 	ok := utils.ValidateBookRequest(req)
 	if !ok {
 		return &bookrpc.BookResponse{}, status.Error(codes.InvalidArgument, "required request arguments must be specified")
 	}
 
-	resp, err := a.service.Book(ctx, req)
+	resp, err := a.Service.Book(ctx, req)
 	if err != nil {
 		switch {
 		case errors.Is(err, bookservice.ErrDuplicate):

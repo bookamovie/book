@@ -10,6 +10,9 @@ func ValidateBookRequest(req *bookrpc.BookRequest) bool {
 	case req.GetCinema().GetName() == "":
 		return false
 
+	case req.GetCinema().GetLocation() == "":
+		return false
+
 	case req.GetMovie().GetTitle() == "":
 		return false
 

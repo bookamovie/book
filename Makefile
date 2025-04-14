@@ -15,5 +15,8 @@ run_prod: $(cmd_book)
 run_custom: $(cmd_book)
 	CONFIG_PATH=config/custom.yaml LOG_MODE=custom go run $(cmd_book)
 
-migrate: $(cmd_migrator)
-	MIGRATIONS=migrations/sqlite DATABASE=storage/db.sqlite go run $(cmd_migrator)
+migrate_app: $(cmd_migrator)
+	MIGRATIONS=migrations/sqlite STORAGE=storage/db.sqlite go run $(cmd_migrator)
+
+migrate_tests: $(cmd_migrator)
+	MIGRATIONS=tests/migrations/sqlite STORAGE=tests/storage/db.sqlite go run $(cmd_migrator)

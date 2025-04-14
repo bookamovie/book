@@ -1,0 +1,11 @@
+book:
+  network: tcp
+  address: 0.0.0.0:5092
+sqlite:
+  address: storage/db.sqlite
+kafka:
+  addresses:
+    - ~
+  topic: ~
+  offset: ~
+  partition: ~

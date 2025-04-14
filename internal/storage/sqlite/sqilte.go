@@ -5,7 +5,6 @@ import (
 	"log/slog"
 
 	"github.com/mattn/go-sqlite3"
-	_ "github.com/mattn/go-sqlite3"
 	"github.com/xoticdsign/book/internal/lib/logger"
 	"github.com/xoticdsign/book/internal/utils"
 	bookrpc "github.com/xoticdsign/bookamovie-proto/gen/go/book/v3"
@@ -13,9 +12,9 @@ import (
 
 // Storage{} handles interaction with the SQLite database.
 type Storage struct {
-	DB *sql.DB
+	DB  *sql.DB
+	Log *logger.Logger
 
-	log    *logger.Logger
 	config utils.Config
 }
 
@@ -27,9 +26,9 @@ func New(cfg utils.Config, log *logger.Logger) (*Storage, error) {
 	}
 
 	return &Storage{
-		DB: db,
+		DB:  db,
+		Log: log,
 
-		log:    log,
 		config: cfg,
 	}, nil
 }
@@ -53,7 +52,7 @@ func (s *Storage) Book(query *BookQuery) error {
 
 	tx, err := s.DB.Begin()
 	if err != nil {
-		s.log.Logs.StorageLog.Error(
+		s.Log.Logs.StorageLog.Error(
 			"can't start a transaction",
 			slog.String("op", op),
 			slog.String("error", err.Error()),
@@ -63,20 +62,10 @@ func (s *Storage) Book(query *BookQuery) error {
 	}
 	defer tx.Rollback()
 
-	stmt, err := tx.Prepare(`INSERT INTO bookings (id, movie, screen, seat, date, cinema, location) 
-	SELECT ?, ?, ?, ?, ?, ?, ? 
-	WHERE (
-	(SELECT COUNT(*) 
-	FROM bookings 
-	WHERE screen = ? AND date = ? AND cinema = ? AND location = ?) 
-	< 
-    (SELECT seats 
-	FROM screens 
-	WHERE screen = ? AND cinema = ? AND location = ?)
-	);`)
+	stmt, err := tx.Prepare("INSERT INTO bookings(id, movie, screen, seat, date, cinema, location) VALUES(?, ?, ?, ?, ?, ?, ? );")
 
 	if err != nil {
-		s.log.Logs.StorageLog.Error(
+		s.Log.Logs.StorageLog.Error(
 			"can't prepare a statement",
 			slog.String("op", op),
 			slog.String("error", err.Error()),
@@ -94,16 +83,9 @@ func (s *Storage) Book(query *BookQuery) error {
 		query.Data.Session.Date.AsTime(),
 		query.Data.Cinema.Name,
 		query.Data.Cinema.Location,
-		query.Data.Session.Screen,
-		query.Data.Session.Date.AsTime(),
-		query.Data.Cinema.Name,
-		query.Data.Cinema.Location,
-		query.Data.Session.Screen,
-		query.Data.Cinema.Name,
-		query.Data.Cinema.Location,
 	)
 	if err != nil {
-		s.log.Logs.StorageLog.Error(
+		s.Log.Logs.StorageLog.Error(
 			"can't execute a statement",
 			slog.String("op", op),
 			slog.String("error", err.Error()),
@@ -114,7 +96,7 @@ func (s *Storage) Book(query *BookQuery) error {
 
 	affected, _ := res.RowsAffected()
 	if affected == 0 {
-		s.log.Logs.StorageLog.Warn(
+		s.Log.Logs.StorageLog.Warn(
 			sqlite3.ErrConstraintUnique.Error(),
 			slog.String("op", op),
 		)
@@ -132,3 +114,6 @@ type UnimplementedStorage struct{}
 
 // Book() is a dummy implementation of the Book method, returning nil.
 func (u *UnimplementedStorage) Book(query *BookQuery) error { return nil }
+
+// Shutdown() is a dummy implementation of the Shutdown method, returning nil.
+func (u *UnimplementedStorage) Shutdown() {}
