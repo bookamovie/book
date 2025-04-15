@@ -2,7 +2,6 @@ package tests
 
 import (
 	"context"
-	"os"
 	"testing"
 	"time"
 
@@ -13,17 +12,20 @@ import (
 	"github.com/xoticdsign/book/internal/utils"
 	"github.com/xoticdsign/book/tests/suite"
 	bookrcp "github.com/xoticdsign/bookamovie-proto/gen/go/book/v3"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 func TestBook_Functional(t *testing.T) {
 	cases := []struct {
-		name        string
-		in          *bookrcp.BookRequest
-		expectedErr error
+		name             string
+		in               *bookrcp.BookRequest
+		expectedCode     codes.Code
+		expectedResponse bool
 	}{
 		{
-			name: "happy test",
+			name: "happy case",
 			in: &bookrcp.BookRequest{
 				Cinema: &bookrcp.Cinema{
 					Name:     "cinema",
@@ -38,12 +40,21 @@ func TestBook_Functional(t *testing.T) {
 					Date:   timestamppb.New(time.Now()),
 				},
 			},
-			expectedErr: nil,
+			expectedCode:     codes.OK,
+			expectedResponse: true,
+		},
+		{
+			name: "bad request",
+			in: &bookrcp.BookRequest{
+				Cinema: &bookrcp.Cinema{
+					Name:     "cinema",
+					Location: "location",
+				},
+			},
+			expectedCode:     codes.InvalidArgument,
+			expectedResponse: false,
 		},
 	}
-
-	os.Setenv(suite.CpEnvName, "config/test.yaml")
-	os.Setenv(suite.LmEnvName, "silent")
 
 	cfg, err := utils.LoadConfig()
 	if err != nil {
@@ -70,8 +81,15 @@ func TestBook_Functional(t *testing.T) {
 	for _, cs := range cases {
 		suite.T.Run(cs.name, func(t *testing.T) {
 			resp, err := suite.Client.Book(context.Background(), cs.in)
-			assert.Equal(t, cs.expectedErr, err)
-			assert.NotEmpty(t, resp.GetOrder().GetTicket())
+			st, ok := status.FromError(err)
+			if ok {
+				assert.Equal(t, cs.expectedCode, st.Code())
+			}
+			if cs.expectedResponse {
+				assert.NotEmpty(t, resp.GetOrder().GetTicket())
+			} else {
+				assert.Empty(t, resp.GetOrder().GetTicket())
+			}
 		})
 	}
 }

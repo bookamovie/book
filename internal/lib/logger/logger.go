@@ -66,11 +66,16 @@ func New() (*Logger, error) {
 
 	switch logMode {
 	case "silent":
+		appLog = slog.New(silentHandler{})
 		bookLog = slog.New(silentHandler{})
 		storageLog = slog.New(silentHandler{})
 		brokerLog = slog.New(silentHandler{})
 
 	case "local":
+		appLog = slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
+			Level: slog.LevelDebug,
+		}))
+
 		bookLog = slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
 			Level: slog.LevelDebug,
 		}))
@@ -101,6 +106,10 @@ func New() (*Logger, error) {
 		if err != nil {
 			return &Logger{}, err
 		}
+
+		appLog = slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
+			Level: slog.LevelDebug,
+		}))
 
 		bookLog = slog.New(slog.NewJSONHandler(b, &slog.HandlerOptions{
 			Level: slog.LevelDebug,
@@ -133,6 +142,10 @@ func New() (*Logger, error) {
 			return &Logger{}, err
 		}
 
+		appLog = slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
+			Level: slog.LevelInfo,
+		}))
+
 		bookLog = slog.New(slog.NewJSONHandler(b, &slog.HandlerOptions{
 			Level: slog.LevelInfo,
 		}))
@@ -148,10 +161,6 @@ func New() (*Logger, error) {
 	default:
 		return &Logger{}, ErrWrongLogger
 	}
-
-	appLog = slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
-		Level: slog.LevelInfo,
-	}))
 
 	var logFiles []*os.File
 

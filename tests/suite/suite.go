@@ -13,11 +13,6 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-var (
-	CpEnvName = "CONFIG_PATH"
-	LmEnvName = "LOG_MODE"
-)
-
 type Suite struct {
 	*testing.T
 

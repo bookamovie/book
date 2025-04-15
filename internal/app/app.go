@@ -72,7 +72,7 @@ func (a *App) Run() {
 	errChan := make(chan error, 1)
 
 	a.Log.Logs.AppLog.Info(
-		"starting an app",
+		"started an app",
 		slog.String("op", op),
 		slog.Any("config", a.Config),
 	)
