@@ -5,7 +5,6 @@
 # LOCATIONS ###
 
 log
-storage/db.sqlite
 
 # TRASH #######
 
