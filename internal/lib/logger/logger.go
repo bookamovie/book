@@ -43,7 +43,7 @@ func (s silentHandler) WithGroup(_ string) slog.Handler               { return s
 // New() initializes and returns a configured Logger based on the LOG_MODE environment variable.
 //
 // It supports multiple modes: "silent", "local", "dev", and "prod".
-//   - silent: disables all logs except AppLog.
+//   - silent: disables all logs.
 //   - local: prints all logs to stdout.
 //   - dev: writes logs to JSON files in log/dev/.
 //   - prod: writes logs to JSON files in log/.

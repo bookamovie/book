@@ -1,0 +1,11 @@
+book:
+  network: ~
+  address: ~
+sqlite:
+  address: ~
+kafka:
+  addresses:
+    - ~
+  topic: ~
+  offset: ~
+  partition: ~
