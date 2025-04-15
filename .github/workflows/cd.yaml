@@ -2,7 +2,7 @@ name: CD
 on:
   push:
     tags:
-      - v*
+      - v*-release
 jobs:
   docker:
     name: Docker Deployment
