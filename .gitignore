@@ -6,7 +6,6 @@
 
 log
 storage/db.sqlite
-tests/storage/db.sqlite
 
 # TRASH #######
 
