@@ -24,6 +24,7 @@ jobs:
           if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
             echo "VERSION=${GITHUB_REF##*/}" >> $GITHUB_ENV
           fi
-      - name: Build Image
+      - name: Build And Push Image
         run: |
           docker build -f deployments/docker/Dockerfile -t ghcr.io/${{ github.repository }}:${VERSION} .
+          docker push ghcr.io/${{ github.repository }}:${VERSION}

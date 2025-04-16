@@ -1,6 +1,6 @@
 package main
 
-import "github.com/xoticdsign/book/internal/app"
+import "github.com/bookamovie/book/internal/app"
 
 func main() {
 	a, err := app.New()

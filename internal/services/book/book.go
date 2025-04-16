@@ -5,13 +5,13 @@ import (
 	"errors"
 	"fmt"
 
+	broker "github.com/bookamovie/book/internal/broker/kafka"
+	"github.com/bookamovie/book/internal/lib/logger"
+	storage "github.com/bookamovie/book/internal/storage/sqlite"
+	"github.com/bookamovie/book/internal/utils"
+	bookrpc "github.com/bookamovie/proto/gen/go/book/v3"
 	"github.com/mattn/go-sqlite3"
 	"github.com/thanhpk/randstr"
-	broker "github.com/xoticdsign/book/internal/broker/kafka"
-	"github.com/xoticdsign/book/internal/lib/logger"
-	storage "github.com/xoticdsign/book/internal/storage/sqlite"
-	"github.com/xoticdsign/book/internal/utils"
-	bookrpc "github.com/xoticdsign/bookamovie-proto/gen/go/book/v3"
 )
 
 var (

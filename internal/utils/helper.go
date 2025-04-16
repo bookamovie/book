@@ -1,6 +1,6 @@
 package utils
 
-import bookrpc "github.com/xoticdsign/bookamovie-proto/gen/go/book/v3"
+import bookrpc "github.com/bookamovie/proto/gen/go/book/v3"
 
 // ValidateBookRequest() validates the fields in the BookRequest to ensure all required information is provided.
 //

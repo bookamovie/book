@@ -6,7 +6,7 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/xoticdsign/book/internal/utils"
+	"github.com/bookamovie/book/internal/utils"
 )
 
 const lmEnvName = "LOG_MODE"

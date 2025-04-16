@@ -9,10 +9,10 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/xoticdsign/book/internal/lib/logger"
-	bookservice "github.com/xoticdsign/book/internal/services/book"
-	"github.com/xoticdsign/book/internal/utils"
-	bookrpc "github.com/xoticdsign/bookamovie-proto/gen/go/book/v3"
+	"github.com/bookamovie/book/internal/lib/logger"
+	bookservice "github.com/bookamovie/book/internal/services/book"
+	"github.com/bookamovie/book/internal/utils"
+	bookrpc "github.com/bookamovie/proto/gen/go/book/v3"
 )
 
 // App{} represents the gRPC server application for the book service.

@@ -6,12 +6,12 @@ import (
 	"os/signal"
 	"syscall"
 
-	bookapp "github.com/xoticdsign/book/internal/app/book"
-	broker "github.com/xoticdsign/book/internal/broker/kafka"
-	"github.com/xoticdsign/book/internal/lib/logger"
-	bookservice "github.com/xoticdsign/book/internal/services/book"
-	storage "github.com/xoticdsign/book/internal/storage/sqlite"
-	"github.com/xoticdsign/book/internal/utils"
+	bookapp "github.com/bookamovie/book/internal/app/book"
+	broker "github.com/bookamovie/book/internal/broker/kafka"
+	"github.com/bookamovie/book/internal/lib/logger"
+	bookservice "github.com/bookamovie/book/internal/services/book"
+	storage "github.com/bookamovie/book/internal/storage/sqlite"
+	"github.com/bookamovie/book/internal/utils"
 )
 
 // App{} coordinates the main components of the bookamovie service.

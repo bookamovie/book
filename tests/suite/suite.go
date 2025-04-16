@@ -3,12 +3,12 @@ package suite
 import (
 	"testing"
 
-	"github.com/xoticdsign/book/internal/app"
-	bookapp "github.com/xoticdsign/book/internal/app/book"
-	"github.com/xoticdsign/book/internal/lib/logger"
-	bookservice "github.com/xoticdsign/book/internal/services/book"
-	"github.com/xoticdsign/book/internal/utils"
-	bookrpc "github.com/xoticdsign/bookamovie-proto/gen/go/book/v3"
+	"github.com/bookamovie/book/internal/app"
+	bookapp "github.com/bookamovie/book/internal/app/book"
+	"github.com/bookamovie/book/internal/lib/logger"
+	bookservice "github.com/bookamovie/book/internal/services/book"
+	"github.com/bookamovie/book/internal/utils"
+	bookrpc "github.com/bookamovie/proto/gen/go/book/v3"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )

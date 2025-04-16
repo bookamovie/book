@@ -4,10 +4,10 @@ import (
 	"database/sql"
 	"log/slog"
 
+	"github.com/bookamovie/book/internal/lib/logger"
+	"github.com/bookamovie/book/internal/utils"
+	bookrpc "github.com/bookamovie/proto/gen/go/book/v3"
 	"github.com/mattn/go-sqlite3"
-	"github.com/xoticdsign/book/internal/lib/logger"
-	"github.com/xoticdsign/book/internal/utils"
-	bookrpc "github.com/xoticdsign/bookamovie-proto/gen/go/book/v3"
 )
 
 // Storage{} handles interaction with the SQLite database.
