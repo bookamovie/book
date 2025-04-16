@@ -94,15 +94,15 @@ func New() (*Logger, error) {
 			return &Logger{}, err
 		}
 
-		b, err = utils.OpenLog("log/dev/book.log")
+		b, err = utils.OpenFile("log/dev/book.log")
 		if err != nil {
 			return &Logger{}, err
 		}
-		s, err = utils.OpenLog("log/dev/storage.log")
+		s, err = utils.OpenFile("log/dev/storage.log")
 		if err != nil {
 			return &Logger{}, err
 		}
-		br, err = utils.OpenLog("log/dev/broker.log")
+		br, err = utils.OpenFile("log/dev/broker.log")
 		if err != nil {
 			return &Logger{}, err
 		}
@@ -129,15 +129,15 @@ func New() (*Logger, error) {
 			return &Logger{}, err
 		}
 
-		b, err = utils.OpenLog("log/book.log")
+		b, err = utils.OpenFile("log/book.log")
 		if err != nil {
 			return &Logger{}, err
 		}
-		s, err = utils.OpenLog("log/storage.log")
+		s, err = utils.OpenFile("log/storage.log")
 		if err != nil {
 			return &Logger{}, err
 		}
-		br, err = utils.OpenLog("log/broker.log")
+		br, err = utils.OpenFile("log/broker.log")
 		if err != nil {
 			return &Logger{}, err
 		}

@@ -13,6 +13,7 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
+// Suite{} struct holds the testing framework, the app instance, and the gRPC client
 type Suite struct {
 	*testing.T
 
@@ -20,6 +21,9 @@ type Suite struct {
 	Client bookrpc.BookClient
 }
 
+// New() initializes a new test suite, setting up the application, gRPC client, and necessary components
+//
+// The function takes various configuration parameters to set up the app's environment
 func New(t *testing.T, cfg utils.Config, log *logger.Logger, storage bookservice.Querier, broker bookservice.Brokerer) *Suite {
 	t.Helper()
 	t.Parallel()

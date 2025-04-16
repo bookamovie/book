@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/bookamovie/book/internal/utils"
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/sqlite3"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
@@ -31,6 +32,12 @@ func main() {
 		panic(ErrStorageNotSpecified)
 	}
 	defer os.Unsetenv(sEnvName)
+
+	file, err := utils.OpenFile(storage)
+	if err != nil {
+		panic(err)
+	}
+	file.Close()
 
 	m, err := migrate.New("file://"+migrations, "sqlite3://"+storage)
 	if err != nil {

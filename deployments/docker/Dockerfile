@@ -10,6 +10,10 @@ RUN go build -o ./build/book ./cmd/book/main.go && \
 
 FROM debian:bookworm-slim
 
+LABEL org.opencontainers.image.source https://github.com/bookamovie/book
+LABEL org.opencontainers.image.description Book Microservice Image
+LABEL org.opencontainers.image.licenses MIT
+
 WORKDIR /book
 
 COPY --from=build book/build/book .

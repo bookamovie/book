@@ -1,6 +1,7 @@
 # FILES #######
 
 *_log.json
+*.sqlite
 
 # LOCATIONS ###
 

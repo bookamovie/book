@@ -17,6 +17,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
+// TestBook_Functional() tests the functional behavior of the Book service by simulating different booking scenarios and checking the expected outcomes.
 func TestBook_Functional(t *testing.T) {
 	cases := []struct {
 		name             string
